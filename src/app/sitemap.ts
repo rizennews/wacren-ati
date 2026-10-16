@@ -2,25 +2,21 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://ati.wacren.net';
+  const locales = ['en', 'fr', 'pt'];
+  const routes = ['', '/about', '/training', '/facilitators', '/netsec', '/blog', '/contact'];
   
-  return [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/netsec`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
-  ];
+  const entries: MetadataRoute.Sitemap = [];
+  
+  routes.forEach((route) => {
+    locales.forEach((locale) => {
+      entries.push({
+        url: `${baseUrl}/${locale}${route}`,
+        lastModified: new Date(),
+        changeFrequency: route === '' ? 'weekly' : 'monthly',
+        priority: route === '' ? 1.0 : 0.8,
+      });
+    });
+  });
+  
+  return entries;
 }
